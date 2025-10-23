@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'aquaflow.urls'
+ROOT_URLCONF = 'honeydrop.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'aquaflow.wsgi.application'
+WSGI_APPLICATION = 'honeydrop.wsgi.application'
 
 
 # Database
