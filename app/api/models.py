@@ -159,7 +159,6 @@ class Customer(models.Model):
     email = models.EmailField(blank=True, null=True)
     area = models.CharField(max_length=255)
     address = models.TextField()
-    product = models.CharField(max_length=255)
     installation_date = models.DateField()
     expiry_date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -173,7 +172,7 @@ class Customer(models.Model):
         ordering = ['-created_at']
     
     def __str__(self):
-        return f"{self.name} - {self.product}"
+        return f"{self.name}"
     
     def save(self, *args, **kwargs):
         if self.installation_date and not self.expiry_date:

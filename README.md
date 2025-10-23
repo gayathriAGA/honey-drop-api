@@ -4,7 +4,7 @@ API for Honey Drop
 ## Notes
 
 - Command to create an admin user <br>
-`python manage.py createsuperuser --name Admin --username admin@aquaflow.com --role admin --email admin@aquaflow.com`
+`python manage.py createsuperuser --name Admin --username admin@honeydrop.com --role admin --email admin@honeydrop.com`
 
 - Command to capture migration<br>
 `python manage.py makemigrations`

@@ -1,0 +1,22 @@
+services:
+  # Backend service
+  backend:
+    build:
+      context: ./honeydrop-backend
+      dockerfile: Dockerfile
+    container_name: honeydrop-app-backend
+    restart: unless-stopped
+    volumes:
+      - honeydrop_sqlite_data:/var/app/db
+    networks:
+      - logistics-network  # Add to custom network
+    # Don't expose ports - only nginx-proxy should be exposed
+
+# Define custom network
+networks:
+  logistics-network:
+    driver: bridge
+
+# Volumes
+volumes:
+  honeydrop_sqlite_data:

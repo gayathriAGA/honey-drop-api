@@ -72,6 +72,11 @@ class SubCategorySerializer(serializers.ModelSerializer):
             validated_data['category_id'] = category_id
         return super().update(instance, validated_data)
 
+class ProductNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name']
+        read_only_fields = ['id', 'name']
 
 class ProductSerializer(serializers.ModelSerializer):
     subCategoryId = serializers.CharField(write_only=True)
@@ -158,7 +163,7 @@ class LeadSerializer(serializers.ModelSerializer):
     def get_products(self, obj):
         # Return product data via ProductInterests relation
         products = Product.objects.filter(interested_leads__lead=obj)
-        return ProductSerializer(products, many=True).data
+        return ProductNameSerializer(products, many=True).data
 
     def create(self, validated_data):
         product_ids = validated_data.pop('productIds', [])
@@ -214,7 +219,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     def get_products(self, obj):
         # Return product data via ProductInterests relation
         products = Product.objects.filter(customers__customer=obj)
-        return ProductSerializer(products, many=True).data
+        return ProductNameSerializer(products, many=True).data
 
     def create(self, validated_data):
         warranty_years = validated_data.pop('warrantyYears', 2)

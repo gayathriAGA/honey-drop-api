@@ -171,7 +171,6 @@ class LeadViewSet(viewsets.ModelViewSet):
                 email=lead.email,
                 area=lead.area,
                 address=lead.address,
-                product=lead.product,
                 installation_date=installation_date,
                 expiry_date=expiry_date,
                 amount=0,
@@ -225,7 +224,6 @@ class LeadViewSet(viewsets.ModelViewSet):
                         'email': data.get('email'),
                         'area': data.get('area'),
                         'address': data.get('address'),
-                        'product': data.get('product'),
                         'status': data.get('status', 'new'),
                         'source': data.get('source'),
                         'priority': data.get('priority', 'medium'),
@@ -235,8 +233,20 @@ class LeadViewSet(viewsets.ModelViewSet):
                     
                     if data.get('followUpDate'):
                         lead_data['follow_up_date'] = data['followUpDate']
-                    
+
+                    product_interests = []
+                    for product_name in data.get('products').split(','):
+                        product = Product.objects.filter(name=product_name).first()
+                        if product is None:
+                            raise Exception(f"Product `{product_name}` not found")
+                        product_interests.append(product)
+
                     lead = Lead.objects.create(**lead_data)
+                    for product_interest in product_interests:
+                        ProductInterests.objects.create(
+                            lead=lead,
+                            product=product_interest,
+                        )
                     imported += 1
                     
                 except Exception as e:
@@ -312,7 +322,6 @@ class CustomerViewSet(viewsets.ModelViewSet):
                         'email': data.get('email'),
                         'area': data.get('area'),
                         'address': data.get('address'),
-                        'product': data.get('product'),
                         'installation_date': installation_date,
                         'expiry_date': expiry_date,
                         'amount': data.get('amount', 0),
@@ -320,8 +329,21 @@ class CustomerViewSet(viewsets.ModelViewSet):
                         'sales_rep': data.get('salesRep'),
                         'notes': data.get('notes'),
                     }
-                    
+
+                    product_interests = []
+                    for product_name in data.get('products', '').split(","):
+                        product = Product.objects.filter(name=product_name).first()
+                        if product is None:
+                            raise Exception(f"Product `{product_name}` not found")
+                        product_interests.append(product)
+
                     customer = Customer.objects.create(**customer_data)
+                    for product_interest in product_interests:
+                        CustomerProducts.objects.create(
+                            customer=customer,
+                            product=product_interest,
+                        )
+
                     imported += 1
                     
                 except Exception as e:
