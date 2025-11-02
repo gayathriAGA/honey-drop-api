@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.decorators import api_view, permission_classes
 
 
 from .permissions import ManageProducts, ManageLeads, ManageUsers, ManageCategories, ManageCustomers
@@ -20,6 +21,11 @@ from .serializers import (
     ProductSerializer, LeadSerializer, CustomerSerializer, ConvertLeadSerializer
 )
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def health(request):
+    return Response("OK", status=status.HTTP_200_OK)
 
 
 class AuthViewSet(viewsets.ViewSet):

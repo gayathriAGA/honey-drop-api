@@ -1,22 +1,51 @@
 services:
+  # Frontend service
+  frontend:
+    build:
+      context: ./honey-drop-frontend
+      dockerfile: Dockerfile
+    container_name: honey-drop-frontend
+    restart: unless-stopped
+    networks:
+      - honey-drop-network
+    expose:
+      - "80"  # Expose to nginx-proxy only (not to host)
+
   # Backend service
   backend:
     build:
-      context: ./honeydrop-backend
+      context: ./honey-drop-backend
       dockerfile: Dockerfile
-    container_name: honeydrop-app-backend
+    container_name: honey-drop-backend
     restart: unless-stopped
     volumes:
-      - honeydrop_sqlite_data:/var/app/db
+      - honey-drop_sqlite_data:/var/app/db
     networks:
-      - logistics-network  # Add to custom network
+      - honey-drop-network  # Add to custom network
     # Don't expose ports - only nginx-proxy should be exposed
 
-# Define custom network
+  # Nginx proxy service
+  nginx-proxy:
+    image: nginx:stable-alpine
+    container_name: honey-drop-app-proxy
+    restart: unless-stopped
+    ports:
+      - "8000:80"     # HTTP
+      - "8444:443"    # HTTPS
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      # comment the following if you don't have real SSL yet
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./certs:/etc/ssl/certs/custom:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - honey-drop-network
+
 networks:
-  logistics-network:
+  honey-drop-network:
     driver: bridge
 
-# Volumes
 volumes:
-  honeydrop_sqlite_data:
+  honey-drop_sqlite_data:
