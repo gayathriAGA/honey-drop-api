@@ -87,6 +87,15 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [ManageUsers]
     # pagination_class = PageNumberPagination
 
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+        if user == request.user:
+            return Response(
+                {"error": "You cannot delete your own account."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        return super().destroy(request, *args, **kwargs)
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
