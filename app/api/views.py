@@ -141,7 +141,7 @@ class LeadViewSet(viewsets.ModelViewSet):
     queryset = Lead.objects.all().prefetch_related('interests__product')
     serializer_class = LeadSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['status', 'area', 'priority', 'source']
+    filterset_fields = ['status', 'area', 'priority', 'source', 'follow_up_date']
     search_fields = ['name', 'phone', 'email', 'product', 'notes']
     ordering_fields = ['created_at', 'follow_up_date']
     permission_classes = [ManageLeads]

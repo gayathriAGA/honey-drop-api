@@ -127,7 +127,7 @@ class Lead(models.Model):
     phone = models.CharField(max_length=20)
     email = models.EmailField(blank=True, null=True)
     area = models.CharField(max_length=255)
-    address = models.TextField()
+    address = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     source = models.CharField(max_length=100, blank=True, null=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='medium')
